@@ -7,8 +7,8 @@ from email.mime.text import MIMEText
 def send_email(receiver_email, subject, body_text):
     try:
         # Use your Gmail address and app-specific password
-        sender_email = "aastha.banaotech@gmail.com"
-        password = "lrde mafc mnxo dzig"  # Replace this with your app-specific password
+        sender_email = "" #add your email
+        password = ""  # Replace this with your app-specific password
 
         # Prepare the email content
         msg = MIMEMultipart()
