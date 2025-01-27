@@ -1,45 +1,26 @@
 import os
 import smtplib
 import json
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-# If modifying or sending emails, use the correct Gmail API scope
-SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-
-# Load credentials from token file
-def authenticate_gmail_api():
-    """Handles OAuth2 authentication for Gmail API"""
-    creds = None
-    # The file token.json stores the user's access and refresh tokens.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-    return creds
-
 def send_email(receiver_email, subject, body_text):
     try:
+        # Use your Gmail address and app-specific password
         sender_email = "aastha.banaotech@gmail.com"
-        password = "lrde mafc mnxo dzig"  # App password should be set here
+        password = "lrde mafc mnxo dzig"  # Replace this with your app-specific password
 
         # Prepare the email content
-        message = f"Subject: {subject}\n\n{body_text}"
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = receiver_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body_text, 'plain'))
 
-        # Connect to Gmail SMTP server
+        # Connect to Gmail's SMTP server and send the email
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
 
         return {
             "statusCode": 200,
