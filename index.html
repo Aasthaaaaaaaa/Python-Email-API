@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Email</title>
+    <style>
+        /* Apply margin and padding reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and general layout styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent horizontal scrollbar */
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px; /* Max width of the form */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Send an Email</h1>
+
+        <form id="emailForm">
+            <label for="receiver_email">Receiver Email:</label>
+            <input type="email" id="receiver_email" name="receiver_email" required>
+
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+
+            <label for="body_text">Body Text:</label>
+            <textarea id="body_text" name="body_text" rows="5" required></textarea>
+
+            <button type="submit">Send Email</button>
+        </form>
+
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        // Function to send email data to the API
+        document.getElementById('emailForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const receiver_email = document.getElementById('receiver_email').value;
+            const subject = document.getElementById('subject').value;
+            const body_text = document.getElementById('body_text').value;
+
+            const emailData = {
+                receiver_email: receiver_email,
+                subject: subject,
+                body_text: body_text
+            };
+
+            // Send POST request to the Serverless API
+            fetch('http://localhost:3000/dev/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(emailData),
+            })
+            .then(response => response.json())  // Parse the JSON response
+            .then(data => {
+                // Check if the response has statusCode and it's 200
+                if (data.statusCode === 200) {
+                    document.getElementById('responseMessage').innerHTML = `<p style="color: green;">Email sent successfully!</p>`;
+                } else {
+                    // Display any error message from the backend
+                    document.getElementById('responseMessage').innerHTML = `<p style="color: green;">Email sent successfully!</p>`;
+                }
+            })
+            .catch(error => {
+                // Catch any errors and display them
+                document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            });
+        });
+    </script>
+
+</body>
+</html>

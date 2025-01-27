@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "serverless-offline": "^14.4.0"
+  },
+  "dependencies": {
+    "serverless-plugin-static-website": "^1.1.0"
+  }
+}

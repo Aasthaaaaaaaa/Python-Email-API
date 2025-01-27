@@ -1,0 +1,25 @@
+service: python-api
+
+provider:
+  name: aws
+  runtime: python3.9
+
+functions:
+  sendEmail:
+    handler: handler.handler
+    events:
+      - http:
+          path: send-email
+          method: post
+          cors: true  # Allow CORS for this function
+
+  serveFrontend:
+    handler: handler.serve_frontend
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true  # Allow CORS for serving the frontend
+
+plugins:
+  - serverless-offline
